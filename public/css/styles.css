@@ -1,0 +1,27 @@
+.dogsLink {
+    text-align: center;
+    color: #74BDCB;
+}
+
+.seeList {
+    color: #FFA384;
+}
+
+h1 {
+    text-align: center;
+    color: #74BDCB;
+}
+
+ul {
+  display: table;
+  margin: 0 auto;
+}
+
+.bulletPoint {
+    color: #FFA384
+}
+
+h3{
+    text-align: center;
+    color: #FFA384
+}

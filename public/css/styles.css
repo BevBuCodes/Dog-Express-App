@@ -8,11 +8,13 @@
 }
 
 h1 {
+    font-family: 'Bangers', cursive;
     text-align: center;
     color: #74BDCB;
 }
 
 ul {
+  font-family: 'Bangers', cursive;
   display: table;
   margin: 0 auto;
 }
@@ -22,6 +24,14 @@ ul {
 }
 
 h3{
+    font-family: 'Bangers', cursive;
     text-align: center;
     color: #FFA384
+}
+
+.apiImage {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
 }

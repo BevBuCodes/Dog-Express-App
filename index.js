@@ -6,24 +6,33 @@ const port = 3000;
 const express = require('express');
 const app = express();
 
-// app.use(express.static('public'));
-
-app.use(express.static('public'));
+const fetch = require('node-fetch');
 
 const es6Renderer = require('express-es6-template-engine');
 app.engine('html', es6Renderer);
 app.set('views', 'templates');
 app.set('view engine', 'html');
 
-
-
-
-
 const server = http.createServer(app);
 
 const db = require('./db');
 
-const fetch = require('node-fetch');
+const morgan = require('morgan');
+const logger = morgan('tiny');
+app.use(logger);
+
+const helmet = require('helmet');
+app.use(helmet({
+    contentSecurityPolicy: false,
+}));
+
+app.use(express.static('public'));
+
+// app.use((req, res, next) => {
+//     console.log(`${req.method} ${req.path}`);
+//     next();
+// })
+
 
 app.get('/', (req, res) => {
     res.render('home', {
@@ -50,52 +59,66 @@ app.get('/dogs', (req, res) => {
     });
 });
 
-async function dogPic() {
-    const response = await fetch(`https://dog.ceo/api/breed/labrador/images/random`)
-    const dogImage = await response.json()
-    console.log(dogImage)
-    
-}
-
-dogPic();
 
 
-app.get('/dogs/:breed', (req, res) => {
-    
-    let {breed} = req.params;
+app.get('/dogs/:breed',  async (req, res) => {
+    console.log(req.path);
+
+    const {breed} = req.params;
     console.log(breed);
-    let dog = db.find(thisDog => thisDog.breed === breed);
-    if(dog) {
+    const dog = db.find((thisDog) => thisDog.breed === breed);
+    if (dog) {
         console.log(dog);
-
-       
-
-        // fetch(`https://dog.ceo/api/breed/ + ${dog.breed} + /images/random`)
-        // .then(res => res.json())
-        // .then(json => console.log(json));
-
-        res.render('dog', {
+        var pic = await fetch(`https://dog.ceo/api/breed/${dog.breed}/images/random`).then(res => res.json());
+        console.log(pic.message);
+        
+        dog.image = pic.message;
+        
+        res.render('dog.html', {
             locals: {
                 dog,
+                // pic,
                 title: 'Dogtails'
             },
             partials: {
-                head: '/partials/head'
+                head: '/partials/head',
+                image: '/partials/images'
             }
         });
-    }else {
+    } else {
         res.status(404)
-        .send("No friend with that name found");
+            .send(`No dog found with name '${breed}'`);
     }
 });
+ 
+
+    // if(dog) {
+    //     console.log(dog);
+
+    //     var dogPicture = await fetch(`https://dog.ceo/api/breed/${dog.breed}/images/random`)
+    //     .then(res => res.json());
+    //     console.log(dogPicture.message);
+
+    //     dog.image = dogPicture.message;
+
+//         res.render('dog.html', {
+//             locals: {
+//                 dog,
+//                 title: 'Dogtails'
+//             },
+//             partials: {
+//                 head: '/partials/head',
+//                 image: '/partials/dog-image'
+//             }
+//         });
+//     }else {
+//         res.status(404)
+//         .send("No friend with that name found");
+//     }
+// });
 
 
     
-
-
-
-
-
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });

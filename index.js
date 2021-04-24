@@ -91,34 +91,7 @@ app.get('/dogs/:breed',  async (req, res) => {
     }
 });
  
-
-    // if(dog) {
-    //     console.log(dog);
-
-    //     var dogPicture = await fetch(`https://dog.ceo/api/breed/${dog.breed}/images/random`)
-    //     .then(res => res.json());
-    //     console.log(dogPicture.message);
-
-    //     dog.image = dogPicture.message;
-
-//         res.render('dog.html', {
-//             locals: {
-//                 dog,
-//                 title: 'Dogtails'
-//             },
-//             partials: {
-//                 head: '/partials/head',
-//                 image: '/partials/dog-image'
-//             }
-//         });
-//     }else {
-//         res.status(404)
-//         .send("No friend with that name found");
-//     }
-// });
-
-
-    
+  
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
